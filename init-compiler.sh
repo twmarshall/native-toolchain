@@ -51,11 +51,11 @@ if [[ $SYSTEM_GCC -eq 0 ]]; then
 
   # Upgrade rpath variable to catch current library location and possible future location
   if [[ "$OSTYPE" == "darwin"* ]]; then
-    FULL_RPATH="-Wl,-rpath,$BUILD_DIR/gcc-$GCC_VERSION/lib,-rpath,'\$ORIGIN/../lib'"
+    FULL_RPATH="-Wl,-rpath,$BUILD_DIR/gcc-$GCC_VERSION/lib,-rpath,'XORIGIN/../lib'"
   else
-    FULL_RPATH="-Wl,-rpath,$BUILD_DIR/gcc-$GCC_VERSION/lib64,-rpath,'\$ORIGIN/../lib64'"
+    FULL_RPATH="-Wl,-rpath,$BUILD_DIR/gcc-$GCC_VERSION/lib64,-rpath,'XORIGIN/../lib64'"
   fi
-  FULL_RPATH="${FULL_RPATH},-rpath,'\$ORIGIN/../lib'"
+  FULL_RPATH="${FULL_RPATH},-rpath,'XORIGIN/../lib'"
 
   FULL_LPATH="-L$BUILD_DIR/gcc-$GCC_VERSION/lib64"
   LDFLAGS="$ARCH_FLAGS $FULL_RPATH $FULL_LPATH"

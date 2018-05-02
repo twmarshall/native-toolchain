@@ -246,12 +246,21 @@ function finalize_package_build() {
   # Build Package
   build_dist_package 2>&1 | tee -a $BUILD_LOG
 
+  # Upgrade rpath variable to catch current library location and possible future location
+  if [[ "$OSTYPE" == "darwin"* ]]; then
+    FULL_RPATH="$BUILD_DIR/gcc-$GCC_VERSION/lib:\$ORIGIN/../lib"
+  else
+    FULL_RPATH="$BUILD_DIR/gcc-$GCC_VERSION/lib64:\$ORIGIN/../lib64"
+  fi
+  FULL_RPATH="${FULL_RPATH}:\$ORIGIN/../lib"
+
   # For all binaries of the package symlink to bin
   if [[ -d $BUILD_DIR/${PKG_NAME}-${PKG_VERSION}${PATCH_VERSION}/bin ]]; then
     mkdir -p $BUILD_DIR/bin
     for p in `ls $BUILD_DIR/${PKG_NAME}-${PKG_VERSION}${PATCH_VERSION}/bin`; do
       ln -f -s $BUILD_DIR/${PKG_NAME}-${PKG_VERSION}${PATCH_VERSION}/bin/$p \
           $BUILD_DIR/bin/$p
+      wrap chrpath -r $FULL_RPATH $BUILD_DIR/${PKG_NAME}-${PKG_VERSION}${PATCH_VERSION}/bin/$p || true
     done
   fi
 
